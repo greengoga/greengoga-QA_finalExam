@@ -1,7 +1,10 @@
 package ru.iteco.fmhandroid.utils
 
+import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingRootException
 import androidx.test.espresso.NoMatchingViewException
@@ -13,14 +16,21 @@ import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.Until
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.not
+import org.junit.Assert.fail
 import ru.iteco.fmhandroid.utils.Wait.TIMEOUT_SHORT
 import java.util.concurrent.TimeoutException
 
 object Wait {
-    const val TIMEOUT_SHORT: Long = 5_000L
+    const val TIMEOUT_SHORT: Long = 1500L
+    const val TIMEOUT_LONG: Long = 10_000L
+
     fun forAnyDisplayed(vararg matchers: Matcher<View>, timeoutMs: Long = TIMEOUT_SHORT) {
         val start = System.currentTimeMillis()
         do {
@@ -35,28 +45,6 @@ object Wait {
         } while (System.currentTimeMillis() - start < timeoutMs)
         for (m in matchers) onView(m).check(matches(isDisplayed()))
     }
-
-//    fun waitForElement(matcher: Matcher<View>, timeout: Long = 5000): ViewAction {
-//        return object : ViewAction {
-//            override fun getConstraints(): Matcher<View> {
-//                return isRoot()
-//            }
-//
-//            override fun getDescription(): String {
-//                return "wait for element matching $matcher for $timeout milliseconds"
-//            }
-//
-//            override fun perform(uiController: UiController, view: View) {
-//                val endTime = System.currentTimeMillis() + timeout
-//                do {
-//                    if (hasMatchingView(view, matcher)) {
-//                        return
-//                    }
-//                    uiController.loopMainThreadForAtLeast(100)
-//                } while (System.currentTimeMillis() < endTime)
-//
-//                throw TimeoutException("Timeout waiting for view matching $matcher") as Throwable
-//            }
 
             private fun hasMatchingView(root: View, matcher: Matcher<View>): Boolean {
                 return try {
@@ -95,6 +83,14 @@ object Wait {
             .inRoot(rootMatcher)
             .check(matches(isDisplayed()))
     }
+
+    fun forTextOnScreen(@StringRes resId: Int, timeoutMs: Long = TIMEOUT_SHORT) {
+        val text = getApplicationContext<Context>().getString(resId)
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        val ok = device.wait(Until.hasObject(By.text(text)), timeoutMs)
+        if (!ok) fail("Expected transient text '$text' within ${timeoutMs}ms")
+    }
+
 }
 
 

@@ -1,12 +1,15 @@
 package ru.iteco.fmhandroid.ui
 
-import ToastMatcher
 import android.view.View
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withHint
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -17,14 +20,8 @@ import org.junit.runner.RunWith
 import ru.iteco.fmhandroid.R
 import ru.iteco.fmhandroid.page.LoginPage
 import ru.iteco.fmhandroid.page.MainPage
+import ru.iteco.fmhandroid.utils.ToastMatcher
 import ru.iteco.fmhandroid.utils.Wait.forAnyDisplayed
-import android.view.WindowManager
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.NoMatchingRootException
-import androidx.test.espresso.Root
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import ru.iteco.fmhandroid.utils.Wait.forToastDisplayed
 
 @LargeTest
@@ -44,7 +41,7 @@ class AuthTest {
         forAnyDisplayed(
             withHint("Login"),
             withId(R.id.authorization_image_button),
-            timeoutMs = ru.iteco.fmhandroid.utils.Wait.TIMEOUT_SHORT
+            timeoutMs = ru.iteco.fmhandroid.utils.Wait.TIMEOUT_LONG
         )
         try {
             onView(withHint("Login")).check(matches(isDisplayed()))
@@ -76,8 +73,8 @@ class AuthTest {
         LoginPage.tapSignIn()
 
         forToastDisplayed(
-            withText("Something went wrong. Try again later"),
-            ToastMatcher(),
+            withText("Something went wrong. Try again later."),
+            ToastMatcher(decorView),
             timeoutMs = 2000
         )
 
@@ -93,7 +90,7 @@ class AuthTest {
 
         forToastDisplayed(
             withText("Login and password cannot be empty"),
-            ToastMatcher(),
+            ToastMatcher(decorView),
             timeoutMs = 2000
         )
 

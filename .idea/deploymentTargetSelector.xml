@@ -11,16 +11,16 @@
       <SelectionState runConfigName="tc001_successfulLoginShowsMainScreen()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="tc003_signInRefusedShowsToastWhenFieldsEmpty()">
+      <SelectionState runConfigName="tc001_successfulLoginShowsMainScreen() (1)">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="tc002_loginWithInvalidCredentialsShowsToast() (1)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="tc002_loginWithInvalidCredentialsShowsToast()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="tc017_reloginAfterLogout_works()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="tc012_logout_returnsToLogin()">
+      <SelectionState runConfigName="tc003_signInRefusedShowsToastWhenFieldsEmpty()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
