@@ -3,19 +3,25 @@ package ru.iteco.fmhandroid.ui
 import android.view.View
 import androidx.test.InstrumentationRegistry
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
+import androidx.test.uiautomator.Until
+import org.hamcrest.Matchers.containsString
 import org.junit.*
 import org.junit.runner.RunWith
 import ru.iteco.fmhandroid.R
 import ru.iteco.fmhandroid.page.LoginPage
 import ru.iteco.fmhandroid.page.MainPage
+import ru.iteco.fmhandroid.utils.IdlingResources
+import ru.iteco.fmhandroid.utils.ToastMatcher
 import ru.iteco.fmhandroid.utils.Wait.forAnyDisplayed
 
 @LargeTest
@@ -59,23 +65,6 @@ class AuthTestDraft {
         MainPage.assertOpened()
     }
 
-
-    @Test
-    fun tc002_loginWithInvalidCredentialsShowsToast() {
-        LoginPage.assertOnScreen()
-        LoginPage.typeLogin("login")
-        LoginPage.typePassword("pass")
-        LoginPage.tapSignIn()
-
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        val toastText = "Something went wrong. Try again later."
-
-        val toast = device.findObject(UiSelector().text(toastText))
-
-        Assert.assertTrue("Toast not found!", toast.exists())
-
-        onView(withHint("Login")).check(matches(isDisplayed()))
-    }
 
 //    @Test
 //    fun tc003_signInRefusedShowsToastWhenFieldsEmpty() {
@@ -121,5 +110,111 @@ class AuthTestDraft {
         LoginPage.typePassword("password2")
         LoginPage.tapSignIn()
         MainPage.assertOpened()
+    }
+
+    @Test
+    fun tc_toastMatcher_attempt() {
+        LoginPage.assertOnScreen()
+        LoginPage.typeLogin("login")
+        LoginPage.typePassword("pass")
+        LoginPage.tapSignIn()
+
+        var currentDecorView: View? = null
+        activityRule.scenario.onActivity {
+            currentDecorView = it.window.decorView
+        }
+
+        onView(withText("Something went wrong. Try again later."))
+            .inRoot(ToastMatcher(currentDecorView))
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun tc_idlingResource_attempt() {
+        LoginPage.assertOnScreen()
+        LoginPage.typeLogin("login")
+        LoginPage.typePassword("pass")
+        LoginPage.tapSignIn()
+
+        val matcher = withText("Something went wrong. Try again later.")
+        val idling = IdlingResources(matcher)
+
+        IdlingRegistry.getInstance().register(idling)
+        try {
+            onView(matcher).check(matches(isDisplayed()))
+        } finally {
+            IdlingRegistry.getInstance().unregister(idling)
+        }
+    }
+
+    @Test
+    fun tc_uiAutomator_attempt() {
+        LoginPage.assertOnScreen()
+        LoginPage.typeLogin("login")
+        LoginPage.typePassword("pass")
+        LoginPage.tapSignIn()
+
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+        val toastText = "Something went wrong. Try again later."
+
+        val appeared = device.wait(Until.hasObject(
+            By.text(toastText)
+                .clazz(android.widget.Toast::class.java.name)
+                .pkg("ru.iteco.fmhandroid")
+        ), 5000)
+
+        Assert.assertTrue("Toast not found via UIAutomator", appeared)
+    }
+
+    @Test
+    fun tc_toastMatcher_containsText() {
+        LoginPage.assertOnScreen()
+        LoginPage.typeLogin("login")
+        LoginPage.typePassword("pass")
+        LoginPage.tapSignIn()
+
+        var currentDecorView: View? = null
+        activityRule.scenario.onActivity {
+            currentDecorView = it.window.decorView
+        }
+
+        onView(withText(containsString("went wrong")))
+            .inRoot(ToastMatcher(currentDecorView))
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun tc_idlingResource_containsText() {
+        LoginPage.assertOnScreen()
+        LoginPage.typeLogin("login")
+        LoginPage.typePassword("pass")
+        LoginPage.tapSignIn()
+
+        val matcher = withText(containsString("went wrong"))
+        val idling = IdlingResources(matcher)
+
+        IdlingRegistry.getInstance().register(idling)
+        try {
+            onView(matcher).check(matches(isDisplayed()))
+        } finally {
+            IdlingRegistry.getInstance().unregister(idling)
+        }
+    }
+
+    @Test
+    fun tc_uiAutomator_containsText() {
+        LoginPage.assertOnScreen()
+        LoginPage.typeLogin("login")
+        LoginPage.typePassword("pass")
+        LoginPage.tapSignIn()
+
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+        val appeared = device.wait(Until.hasObject(
+            By.textContains("went wrong")
+        ), 5000)
+
+        Assert.assertTrue("Toast not found via UIAutomator (containsText)", appeared)
     }
 }
