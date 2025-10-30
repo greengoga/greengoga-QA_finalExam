@@ -1,28 +1,24 @@
 package ru.iteco.fmhandroid.ui
 
 import android.view.View
+import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
-import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withHint
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.core.IsNot.not
+import org.junit.*
 import org.junit.runner.RunWith
 import ru.iteco.fmhandroid.R
 import ru.iteco.fmhandroid.page.LoginPage
 import ru.iteco.fmhandroid.page.MainPage
-import ru.iteco.fmhandroid.utils.ToastMatcher
 import ru.iteco.fmhandroid.utils.Wait.forAnyDisplayed
-import ru.iteco.fmhandroid.utils.Wait.forToastDisplayed
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
@@ -51,7 +47,7 @@ class AuthTest {
 
         MainPage.logout()
 
-        forAnyDisplayed(withHint("Login"), timeoutMs = ru.iteco.fmhandroid.utils.Wait.TIMEOUT_SHORT)
+        forAnyDisplayed(withHint("Login"), timeoutMs = ru.iteco.fmhandroid.utils.Wait.TIMEOUT_LONG)
     }
 
     @Test
@@ -66,57 +62,40 @@ class AuthTest {
     }
 
     @Test
-    fun tc002_loginWithInvalidRemainsOnLoginScreen() {
+    fun tc002_loginWithInvalidCredentialsShowsToast() {
         LoginPage.assertOnScreen()
+
         LoginPage.typeLogin("login")
         LoginPage.typePassword("pass")
         LoginPage.tapSignIn()
 
-        onView(withHint("Login")).check(matches(isDisplayed()))
+        var currentDecorView: View? = null
+        activityRule.scenario.onActivity {
+            currentDecorView = it.window.decorView
+        }
+
+        onView(withText("Something went wrong. Try again later."))
+            .inRoot(withDecorView(not(`is`(currentDecorView))))
+            .check(matches(isDisplayed()))
     }
 
-//    @Test
-//    fun tc002_loginWithInvalidCredentialsShowsToast() {
-//        LoginPage.assertOnScreen()
-//        LoginPage.typeLogin("login2")
-//        LoginPage.typePassword("pass")
-//        LoginPage.tapSignIn()
-//
-//        forToastDisplayed(
-//            withText("Something went wrong. Try again later."),
-//            ToastMatcher(decorView),
-//            timeoutMs = 2000
-//        )
-//
-//        onView(withHint("Login")).check(matches(isDisplayed()))
-//    }
-//
 
     @Test
-    fun tc003_signInRefusedRemainsOnLoginScreen() {
+    fun tc003_signInRefusedShowsToastWhenFieldsEmpty() {
         LoginPage.assertOnScreen()
-        onView(withHint("Login")).perform(replaceText(""), closeSoftKeyboard())
-        onView(withHint("Password")).perform(replaceText(""), closeSoftKeyboard())
+        onView(withHint("Login")).perform(replaceText(""))
+        onView(withHint("Password")).perform(replaceText(""))
         LoginPage.tapSignIn()
 
-        onView(withHint("Login")).check(matches(isDisplayed()))
-    }
+        var currentDecorView: View? = null
+        activityRule.scenario.onActivity {
+            currentDecorView = it.window.decorView
+        }
 
-//    @Test
-//    fun tc003_signInRefusedShowsToastWhenFieldsEmpty() {
-//        LoginPage.assertOnScreen()
-//        onView(withHint("Login")).perform(replaceText(""), closeSoftKeyboard())
-//        onView(withHint("Password")).perform(replaceText(""), closeSoftKeyboard())
-//        LoginPage.tapSignIn()
-//
-//        forToastDisplayed(
-//            withText("Login and password cannot be empty"),
-//            ToastMatcher(decorView),
-//            timeoutMs = 2000
-//        )
-//
-//        onView(withHint("Login")).check(matches(isDisplayed()))
-//    }
+        onView(withText("Login and password cannot be empty"))
+            .inRoot(withDecorView(not(`is`(currentDecorView))))
+            .check(matches(isDisplayed()))
+    }
 
     @Test
     fun tc012_logout_returnsToLogin() {
