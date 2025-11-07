@@ -8,14 +8,25 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import io.qameta.allure.kotlin.Allure
+import io.qameta.allure.kotlin.Epic
+import io.qameta.allure.kotlin.Feature
+import io.qameta.allure.kotlin.Story
+import io.qameta.allure.kotlin.Description
+import io.qameta.allure.kotlin.Severity
+import io.qameta.allure.kotlin.SeverityLevel
+import io.qameta.allure.kotlin.junit4.DisplayName
 import org.junit.*
 import org.junit.runner.RunWith
 import ru.iteco.fmhandroid.R
 import ru.iteco.fmhandroid.page.LoginPage
 import ru.iteco.fmhandroid.page.MainPage
+import ru.iteco.fmhandroid.utils.Wait
 import ru.iteco.fmhandroid.utils.Wait.forAnyDisplayed
 
 @LargeTest
+@Epic("Навигация приложения")
+@Feature("Страница «О приложении»")
 @RunWith(AndroidJUnit4::class)
 class AboutTest {
 
@@ -32,7 +43,7 @@ class AboutTest {
         forAnyDisplayed(
             withHint("Login"),
             withId(R.id.authorization_image_button),
-            timeoutMs = ru.iteco.fmhandroid.utils.Wait.TIMEOUT_LONG
+            timeoutMs = Wait.TIMEOUT_LONG
         )
         try {
             onView(withHint("Login")).check(matches(isDisplayed()))
@@ -42,27 +53,107 @@ class AboutTest {
 
         MainPage.logout()
 
-        forAnyDisplayed(withHint("Login"), timeoutMs = ru.iteco.fmhandroid.utils.Wait.TIMEOUT_LONG)
+        forAnyDisplayed(withHint("Login"), timeoutMs = Wait.TIMEOUT_LONG)
     }
 
     @Test
+    @Story("Открытие страницы About")
+    @DisplayName("TC‑009: Страница «О приложении» открывается и содержит корректные данные")
+    @Description("После успешного входа пользователь открывает экран «О приложении» и проверяет версию, политику конфиденциальности и условия использования.")
+    @Severity(SeverityLevel.MINOR)
     fun tc009_opensAboutPage() {
-        LoginPage.assertOnScreen()
-
-        LoginPage.typeLogin("login2")
-        LoginPage.typePassword("password2")
-        LoginPage.tapSignIn()
-        MainPage.assertOpened()
-
-        MainPage.openAbout()
-
-        onView(withId(R.id.about_version_title_text_view))
-            .check(matches(withText("Version:")))
-
-        onView(withId(R.id.about_privacy_policy_value_text_view))
-            .check(matches(withText("https://vhospice.org/#/privacy-policy/")))
-
-        onView(withId(R.id.about_terms_of_use_value_text_view))
-            .check(matches(withText("https://vhospice.org/#/terms-of-use")))
+        Allure.step("Авторизация с валидными данными") {
+            LoginPage.assertOnScreen()
+            LoginPage.typeLogin("login2")
+            LoginPage.typePassword("password2")
+            LoginPage.tapSignIn()
+            MainPage.assertOpened()
+        }
+        Allure.step("Переход на страницу About") {
+            MainPage.openAbout()
+        }
+        Allure.step("Проверка отображения версии приложения") {
+            onView(withId(R.id.about_version_title_text_view))
+                .check(matches(withText("Version:")))
+        }
+        Allure.step("Проверка URL политики конфиденциальности") {
+            onView(withId(R.id.about_privacy_policy_value_text_view))
+                .check(matches(withText("https://vhospice.org/#/privacy-policy/")))
+        }
+        Allure.step("Проверка URL условий использования") {
+            onView(withId(R.id.about_terms_of_use_value_text_view))
+                .check(matches(withText("https://vhospice.org/#/terms-of-use")))
+        }
     }
 }
+
+
+
+//package ru.iteco.fmhandroid.ui
+//
+//import android.view.View
+//import androidx.test.espresso.Espresso.onView
+//import androidx.test.espresso.NoMatchingViewException
+//import androidx.test.espresso.assertion.ViewAssertions.matches
+//import androidx.test.espresso.matcher.ViewMatchers.*
+//import androidx.test.ext.junit.rules.ActivityScenarioRule
+//import androidx.test.ext.junit.runners.AndroidJUnit4
+//import androidx.test.filters.LargeTest
+//import org.junit.*
+//import org.junit.runner.RunWith
+//import ru.iteco.fmhandroid.R
+//import ru.iteco.fmhandroid.page.LoginPage
+//import ru.iteco.fmhandroid.page.MainPage
+//import ru.iteco.fmhandroid.utils.Wait.forAnyDisplayed
+//
+//@LargeTest
+//@RunWith(AndroidJUnit4::class)
+//class AboutTest {
+//
+//    @Rule
+//    @JvmField
+//    var activityRule = ActivityScenarioRule(AppActivity::class.java)
+//
+//    private lateinit var decorView: View
+//
+//    @Before
+//    fun ensureLoggedOut() {
+//        activityRule.scenario.onActivity { decorView = it.window.decorView }
+//
+//        forAnyDisplayed(
+//            withHint("Login"),
+//            withId(R.id.authorization_image_button),
+//            timeoutMs = ru.iteco.fmhandroid.utils.Wait.TIMEOUT_LONG
+//        )
+//        try {
+//            onView(withHint("Login")).check(matches(isDisplayed()))
+//            return
+//        } catch (_: NoMatchingViewException) {
+//        }
+//
+//        MainPage.logout()
+//
+//        forAnyDisplayed(withHint("Login"), timeoutMs = ru.iteco.fmhandroid.utils.Wait.TIMEOUT_LONG)
+//    }
+//
+//    @Test
+//    fun tc009_opensAboutPage() {
+//        LoginPage.assertOnScreen()
+//
+//        LoginPage.typeLogin("login2")
+//        LoginPage.typePassword("password2")
+//        LoginPage.tapSignIn()
+//        MainPage.assertOpened()
+//
+//        MainPage.openAbout()
+//
+//        onView(withId(R.id.about_version_title_text_view))
+//            .check(matches(withText("Version:")))
+//
+//        onView(withId(R.id.about_privacy_policy_value_text_view))
+//            .check(matches(withText("https://vhospice.org/#/privacy-policy/")))
+//
+//        onView(withId(R.id.about_terms_of_use_value_text_view))
+//            .check(matches(withText("https://vhospice.org/#/terms-of-use")))
+//    }
+//}
