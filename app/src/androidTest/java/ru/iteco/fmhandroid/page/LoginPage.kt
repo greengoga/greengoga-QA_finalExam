@@ -27,16 +27,4 @@ object LoginPage {
     fun tapSignIn() {
         onView(allOf(withId(R.id.enter_button), withText(BTN_SIGN_IN))).perform(click())
     }
-
-//    fun `isSignInEnabled`(): Boolean {
-//        var enabled = false
-//        onView(allOf(withId(R.id.enter_button), withText("Sign in")))
-//            .check { v, _ -> enabled = v?.isEnabled == true }
-//        return enabled
-//    }
-
-//    fun tapSignInExpectStay() {
-//        onView(allOf(withId(R.id.enter_button), withText("Sign in"))).perform(click())
-//        onView(withHint("Login")).check(matches(isDisplayed()))
-//    }
 }

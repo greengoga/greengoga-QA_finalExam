@@ -17,4 +17,28 @@ object MainPage {
         onView(withId(R.id.authorization_image_button)).perform(click())
         onView(withText("Log out")).perform(click())
     }
+
+    fun openNews() {
+        onView(withId(R.id.all_news_text_view)).perform(click())
+    }
+
+    fun openNewsMenuBtn() {
+        onView(withId(R.id.main_menu_image_button)).perform(click())
+        onView(withText("News")).perform(click())
+    }
+
+    fun openQuotes() {
+        onView(withId(R.id.our_mission_image_button)).perform(click())
+    }
+
+    fun openControlPanel() {
+        onView(withId(R.id.main_menu_image_button)).perform(click())
+        onView(withText("News")).perform(click())
+        onView(withId(R.id.edit_news_material_button)).perform(click())
+    }
+
+    fun openAbout() {
+        onView(withId(R.id.main_menu_image_button)).perform(click())
+        onView(withText("About")).perform(click())
+    }
 }

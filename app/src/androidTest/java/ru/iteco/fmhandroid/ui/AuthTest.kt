@@ -1,7 +1,6 @@
 package ru.iteco.fmhandroid.ui
 
 import android.view.View
-import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.action.ViewActions.replaceText
@@ -98,7 +97,7 @@ class AuthTest {
     }
 
     @Test
-    fun tc012_logout_returnsToLogin() {
+    fun tc013_logoutReturnsToLogin() {
         LoginPage.assertOnScreen()
         LoginPage.typeLogin("login2")
         LoginPage.typePassword("password2")
@@ -111,7 +110,7 @@ class AuthTest {
     }
 
     @Test
-    fun tc017_reloginAfterLogout_works() {
+    fun tc018_successfulLoginAfterLogout() {
         LoginPage.assertOnScreen()
         LoginPage.typeLogin("login2")
         LoginPage.typePassword("password2")

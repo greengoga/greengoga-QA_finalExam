@@ -59,38 +59,4 @@ object Wait {
                     false
                 }
             }
-
-    fun forToastDisplayed(
-        textMatcher: Matcher<View>,
-        rootMatcher: Matcher<Root>,
-        timeoutMs: Long = TIMEOUT_SHORT
-    ) {
-        val start = System.currentTimeMillis()
-        do {
-            try {
-                onView(textMatcher)
-                    .inRoot(rootMatcher)
-                    .check(matches(isDisplayed()))
-                return
-            } catch (_: NoMatchingRootException) {
-            } catch (_: NoMatchingViewException) {
-            } catch (_: Throwable) {
-            }
-            Thread.sleep(50)
-        } while (System.currentTimeMillis() - start < timeoutMs)
-
-        onView(textMatcher)
-            .inRoot(rootMatcher)
-            .check(matches(isDisplayed()))
-    }
-
-    fun forTextOnScreen(@StringRes resId: Int, timeoutMs: Long = TIMEOUT_SHORT) {
-        val text = getApplicationContext<Context>().getString(resId)
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        val ok = device.wait(Until.hasObject(By.text(text)), timeoutMs)
-        if (!ok) fail("Expected transient text '$text' within ${timeoutMs}ms")
-    }
-
 }
-
-
