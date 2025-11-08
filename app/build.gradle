@@ -20,7 +20,6 @@ android {
         versionCode 14
         versionName "1.0.0"
         testInstrumentationRunner "io.qameta.allure.android.runners.AllureAndroidJUnitRunner"
-        testInstrumentationRunnerArguments["listener"] = "io.qameta.allure.android.listeners.AllureAndroidListener"
     }
 
     compileOptions {
@@ -100,8 +99,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation "org.jetbrains.kotlin:kotlin-test:1.6.10"
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
-    implementation "io.qameta.allure:allure-kotlin-model:2.4.0"
-    implementation "io.qameta.allure:allure-kotlin-commons:2.4.0"
-    androidTestImplementation "io.qameta.allure:allure-kotlin-junit4:2.4.0"
     androidTestImplementation "io.qameta.allure:allure-kotlin-android:2.4.0"
+    androidTestImplementation "io.qameta.allure:allure-kotlin-junit4:2.4.0"
+    androidTestImplementation "io.qameta.allure:allure-kotlin-model:2.4.0"
+    androidTestImplementation "io.qameta.allure:allure-kotlin-commons:2.4.0"
 }
