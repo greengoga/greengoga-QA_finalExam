@@ -18,11 +18,11 @@ object MainPage {
         onView(withText("Log out")).perform(click())
     }
 
-    fun openNews() {
+    fun openNewsFromMain() {
         onView(withId(R.id.all_news_text_view)).perform(click())
     }
 
-    fun openNewsMenuBtn() {
+    fun openNewsFromMenu() {
         onView(withId(R.id.main_menu_image_button)).perform(click())
         onView(withText("News")).perform(click())
     }
