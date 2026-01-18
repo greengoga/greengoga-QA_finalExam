@@ -18,8 +18,8 @@ import io.qameta.allure.kotlin.junit4.DisplayName
 import org.junit.*
 import org.junit.runner.RunWith
 import ru.iteco.fmhandroid.R
-import ru.iteco.fmhandroid.page.LoginPage
-import ru.iteco.fmhandroid.page.MainPage
+import ru.iteco.fmhandroid.page.LoginPageOld
+import ru.iteco.fmhandroid.page.MainPageOld
 import ru.iteco.fmhandroid.utils.TestData
 import ru.iteco.fmhandroid.utils.Wait
 import ru.iteco.fmhandroid.utils.Wait.forAnyDisplayed
@@ -43,12 +43,12 @@ class AboutTest {
         )
         try {
             onView(withHint("Login")).check(matches(isDisplayed()))
-            LoginPage.typeLogin(TestData.LOGIN)
-            LoginPage.typePassword(TestData.PASSWORD)
-            LoginPage.tapSignIn()
-            MainPage.assertOpened()
+            LoginPageOld.typeLogin(TestData.LOGIN)
+            LoginPageOld.typePassword(TestData.PASSWORD)
+            LoginPageOld.tapSignIn()
+            MainPageOld.assertOpened()
         } catch (_: NoMatchingViewException) {
-            MainPage.assertOpened()
+            MainPageOld.assertOpened()
         }
     }
 
@@ -59,7 +59,7 @@ class AboutTest {
     @Severity(SeverityLevel.MINOR)
     fun tc009_opensAboutPage() {
         Allure.step("Переход на страницу About") {
-            MainPage.openAbout()
+            MainPageOld.openAbout()
         }
         Allure.step("Проверка отображения версии приложения") {
             onView(withId(R.id.about_version_title_text_view))

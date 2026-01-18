@@ -23,8 +23,8 @@ import org.hamcrest.core.IsNot.not
 import org.junit.*
 import org.junit.runner.RunWith
 import ru.iteco.fmhandroid.R
-import ru.iteco.fmhandroid.page.LoginPage
-import ru.iteco.fmhandroid.page.MainPage
+import ru.iteco.fmhandroid.page.LoginPageOld
+import ru.iteco.fmhandroid.page.MainPageOld
 import ru.iteco.fmhandroid.utils.TestData
 import ru.iteco.fmhandroid.utils.Wait.forAnyDisplayed
 
@@ -51,7 +51,7 @@ class AuthTest {
         } catch (_: NoMatchingViewException) {
         }
 
-        MainPage.logout()
+        MainPageOld.logout()
 
         forAnyDisplayed(withHint("Login"), timeoutMs = ru.iteco.fmhandroid.utils.Wait.TIMEOUT_LONG)
     }
@@ -63,17 +63,17 @@ class AuthTest {
     @Severity(SeverityLevel.CRITICAL)
     fun tc001_successfulLoginShowsMainScreen() {
         Allure.step("Ожидание экрана входа") {
-            LoginPage.assertOnScreen()
+            LoginPageOld.assertOnScreen()
         }
         Allure.step("Ввод логина и пароля") {
-            LoginPage.typeLogin(TestData.LOGIN)
-            LoginPage.typePassword(TestData.PASSWORD)
+            LoginPageOld.typeLogin(TestData.LOGIN)
+            LoginPageOld.typePassword(TestData.PASSWORD)
         }
         Allure.step("Нажатие Sign In") {
-            LoginPage.tapSignIn()
+            LoginPageOld.tapSignIn()
         }
         Allure.step("Проверка, что главный экран открыт") {
-            MainPage.assertOpened()
+            MainPageOld.assertOpened()
         }
     }
 
@@ -84,14 +84,14 @@ class AuthTest {
     @Severity(SeverityLevel.NORMAL)
     fun tc002_loginWithInvalidCredentialsShowsToast() {
         Allure.step("Ожидание экрана входа") {
-            LoginPage.assertOnScreen()
+            LoginPageOld.assertOnScreen()
         }
         Allure.step("Ввод неверных логина и пароля") {
-            LoginPage.typeLogin("login")
-            LoginPage.typePassword("pass")
+            LoginPageOld.typeLogin("login")
+            LoginPageOld.typePassword("pass")
         }
         Allure.step("Нажатие Sign In") {
-            LoginPage.tapSignIn()
+            LoginPageOld.tapSignIn()
         }
         Allure.step("Проверка появления Toast с ошибкой") {
             var currentDecorView: View? = null
@@ -111,14 +111,14 @@ class AuthTest {
     @Severity(SeverityLevel.NORMAL)
     fun tc003_signInRefusedShowsToastWhenFieldsEmpty() {
         Allure.step("Ожидание экрана входа") {
-            LoginPage.assertOnScreen()
+            LoginPageOld.assertOnScreen()
         }
         Allure.step("Очистка полей логина и пароля") {
             onView(withHint("Login")).perform(replaceText(""))
             onView(withHint("Password")).perform(replaceText(""))
         }
         Allure.step("Нажатие Sign In") {
-            LoginPage.tapSignIn()
+            LoginPageOld.tapSignIn()
         }
         Allure.step("Проверка появления Toast с текстом об обязательных полях") {
             var currentDecorView: View? = null
@@ -138,16 +138,16 @@ class AuthTest {
     @Severity(SeverityLevel.NORMAL)
     fun tc013_logoutReturnsToLogin() {
         Allure.step("Ожидание экрана входа") {
-            LoginPage.assertOnScreen()
+            LoginPageOld.assertOnScreen()
         }
         Allure.step("Ввод валидных данных и вход") {
-            LoginPage.typeLogin(TestData.LOGIN)
-            LoginPage.typePassword(TestData.PASSWORD)
-            LoginPage.tapSignIn()
-            MainPage.assertOpened()
+            LoginPageOld.typeLogin(TestData.LOGIN)
+            LoginPageOld.typePassword(TestData.PASSWORD)
+            LoginPageOld.tapSignIn()
+            MainPageOld.assertOpened()
         }
         Allure.step("Нажатие кнопки логаута") {
-            MainPage.logout()
+            MainPageOld.logout()
         }
         Allure.step("Проверка, что экран входа отображается") {
             onView(withHint("Login")).check(matches(isDisplayed()))
@@ -161,25 +161,25 @@ class AuthTest {
     @Severity(SeverityLevel.MINOR)
     fun tc018_successfulLoginAfterLogout() {
         Allure.step("Ожидание экрана входа") {
-            LoginPage.assertOnScreen()
+            LoginPageOld.assertOnScreen()
         }
         Allure.step("Ввод данных и вход") {
-            LoginPage.typeLogin(TestData.LOGIN)
-            LoginPage.typePassword(TestData.PASSWORD)
-            LoginPage.tapSignIn()
-            MainPage.assertOpened()
+            LoginPageOld.typeLogin(TestData.LOGIN)
+            LoginPageOld.typePassword(TestData.PASSWORD)
+            LoginPageOld.tapSignIn()
+            MainPageOld.assertOpened()
         }
         Allure.step("Логаут") {
-            MainPage.logout()
+            MainPageOld.logout()
         }
         Allure.step("Возврат на экран входа") {
             onView(withHint("Login")).check(matches(isDisplayed()))
         }
         Allure.step("Ввод данных и вход снова") {
-            LoginPage.typeLogin(TestData.LOGIN)
-            LoginPage.typePassword(TestData.PASSWORD)
-            LoginPage.tapSignIn()
-            MainPage.assertOpened()
+            LoginPageOld.typeLogin(TestData.LOGIN)
+            LoginPageOld.typePassword(TestData.PASSWORD)
+            LoginPageOld.tapSignIn()
+            MainPageOld.assertOpened()
         }
     }
 }

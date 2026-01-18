@@ -20,8 +20,8 @@ import org.hamcrest.Matchers.allOf
 import org.junit.*
 import org.junit.runner.RunWith
 import ru.iteco.fmhandroid.R
-import ru.iteco.fmhandroid.page.LoginPage
-import ru.iteco.fmhandroid.page.MainPage
+import ru.iteco.fmhandroid.page.LoginPageOld
+import ru.iteco.fmhandroid.page.MainPageOld
 import ru.iteco.fmhandroid.utils.TestData
 import ru.iteco.fmhandroid.utils.Wait
 import ru.iteco.fmhandroid.utils.Wait.forAnyDisplayed
@@ -46,18 +46,18 @@ class QuoteTest {
         )
         try {
             onView(withHint("Login")).check(matches(isDisplayed()))
-            LoginPage.typeLogin(TestData.LOGIN)
-            LoginPage.typePassword(TestData.PASSWORD)
-            LoginPage.tapSignIn()
-            MainPage.assertOpened()
+            LoginPageOld.typeLogin(TestData.LOGIN)
+            LoginPageOld.typePassword(TestData.PASSWORD)
+            LoginPageOld.tapSignIn()
+            MainPageOld.assertOpened()
         } catch (_: NoMatchingViewException) {
-            MainPage.assertOpened()
+            MainPageOld.assertOpened()
         }
     }
 
     @After
     fun logout() {
-        MainPage.logout()
+        MainPageOld.logout()
     }
 
     @Test
@@ -67,7 +67,7 @@ class QuoteTest {
     @Severity(SeverityLevel.NORMAL)
     fun tc011_openQuotesFromMain() {
         Allure.step("Переход к разделу «Наша миссия»") {
-            MainPage.openQuotes()
+            MainPageOld.openQuotes()
         }
         Allure.step("Проверка отображения заголовка и списка") {
             onView(withId(R.id.our_mission_title_text_view))
@@ -84,7 +84,7 @@ class QuoteTest {
     @Severity(SeverityLevel.NORMAL)
     fun tc022_openQuoteCard() {
         Allure.step("Переход к разделу «Наша миссия»") {
-            MainPage.openQuotes()
+            MainPageOld.openQuotes()
         }
         Allure.step("Нажатие на первую карточку") {
             onView(

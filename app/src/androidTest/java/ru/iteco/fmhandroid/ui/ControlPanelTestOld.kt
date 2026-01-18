@@ -24,8 +24,8 @@ import org.hamcrest.Matchers.*
 import org.junit.*
 import org.junit.runner.RunWith
 import ru.iteco.fmhandroid.R
-import ru.iteco.fmhandroid.page.LoginPage
-import ru.iteco.fmhandroid.page.MainPage
+import ru.iteco.fmhandroid.page.LoginPageOld
+import ru.iteco.fmhandroid.page.MainPageOld
 import ru.iteco.fmhandroid.utils.TestData
 import ru.iteco.fmhandroid.utils.Wait
 import ru.iteco.fmhandroid.utils.Wait.forAnyDisplayed
@@ -57,12 +57,12 @@ class ControlPanelTest {
         )
         try {
             onView(withHint("Login")).check(matches(isDisplayed()))
-            LoginPage.typeLogin(TestData.LOGIN)
-            LoginPage.typePassword(TestData.PASSWORD)
-            LoginPage.tapSignIn()
-            MainPage.assertOpened()
+            LoginPageOld.typeLogin(TestData.LOGIN)
+            LoginPageOld.typePassword(TestData.PASSWORD)
+            LoginPageOld.tapSignIn()
+            MainPageOld.assertOpened()
         } catch (_: NoMatchingViewException) {
-            MainPage.assertOpened()
+            MainPageOld.assertOpened()
         }
     }
 
@@ -73,8 +73,8 @@ class ControlPanelTest {
     @Severity(SeverityLevel.NORMAL)
     fun tc009_opensCpViaNews() {
         Allure.step("Переход в раздел «Новости» и открытие панели управления") {
-            MainPage.openNewsFromMain()
-            MainPage.openControlPanel()
+            MainPageOld.openNewsFromMain()
+            MainPageOld.openControlPanel()
         }
         Allure.step("Проверка, что заголовок «Control panel» отображается") {
             onView(withText("Control panel")).check(matches(isDisplayed()))
@@ -88,8 +88,8 @@ class ControlPanelTest {
     @Severity(SeverityLevel.CRITICAL)
     fun tc007_sortBtnChangesOrder() {
         Allure.step("Переход в Панель управления") {
-            MainPage.openNewsFromMain()
-            MainPage.openControlPanel()
+            MainPageOld.openNewsFromMain()
+            MainPageOld.openControlPanel()
         }
         Allure.step("Запоминаем заголовок первой новости до сортировки") {
             activityRule.scenario.onActivity { activity ->
@@ -109,8 +109,8 @@ class ControlPanelTest {
     @Severity(SeverityLevel.NORMAL)
     fun tc008_filterBtnFiltersByDate() {
         Allure.step("Открытие панели управления новостями") {
-            MainPage.openNewsFromMain()
-            MainPage.openControlPanel()
+            MainPageOld.openNewsFromMain()
+            MainPageOld.openControlPanel()
         }
         Allure.step("Ввод диапазона дат и применение фильтра") {
             onView(withId(R.id.filter_news_material_button)).perform(click())
@@ -133,8 +133,8 @@ class ControlPanelTest {
     @Severity(SeverityLevel.CRITICAL)
     fun tc010_createsNewsCard() {
         Allure.step("Открытие панели управления и добавление новости") {
-            MainPage.openNewsFromMain()
-            MainPage.openControlPanel()
+            MainPageOld.openNewsFromMain()
+            MainPageOld.openControlPanel()
 
             onView(allOf(
                 withId(R.id.add_news_image_view),
@@ -182,8 +182,8 @@ class ControlPanelTest {
     @Severity(SeverityLevel.CRITICAL)
     fun tc014_editsNewsCardAndChecksChanges() {
         Allure.step("Открытие панели управления и редактирование первой новости") {
-            MainPage.openNewsFromMain()
-            MainPage.openControlPanel()
+            MainPageOld.openNewsFromMain()
+            MainPageOld.openControlPanel()
 
             onView(allOf(
                 withId(R.id.edit_news_item_image_view),
@@ -240,8 +240,8 @@ class ControlPanelTest {
     @Severity(SeverityLevel.CRITICAL)
     fun tc015_successfullyDeletesNewsCard() {
         Allure.step("Открытие панели управления и подготовка новости к удалению") {
-            MainPage.openNewsFromMain()
-            MainPage.openControlPanel()
+            MainPageOld.openNewsFromMain()
+            MainPageOld.openControlPanel()
 
             onView(allOf(
                 withId(R.id.edit_news_item_image_view),
@@ -278,8 +278,8 @@ class ControlPanelTest {
     @Severity(SeverityLevel.NORMAL)
     fun tc016_creatingNewsCardWithoutRequiredFieldsShowsToast() {
         Allure.step("Переход в панель управления и нажатие Add") {
-            MainPage.openNewsFromMain()
-            MainPage.openControlPanel()
+            MainPageOld.openNewsFromMain()
+            MainPageOld.openControlPanel()
             onView(allOf(
                 withId(R.id.add_news_image_view),
                 withContentDescription("Add news button"),
@@ -308,8 +308,8 @@ class ControlPanelTest {
     @Severity(SeverityLevel.MINOR)
     fun tc019_rotateScreenAndCheckStability() {
         Allure.step("Переход в Control Panel и поворот экрана в Landscape") {
-            MainPage.openNewsFromMain()
-            MainPage.openControlPanel()
+            MainPageOld.openNewsFromMain()
+            MainPageOld.openControlPanel()
             activityRule.scenario.onActivity { activity ->
                 activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             }
@@ -331,8 +331,8 @@ class ControlPanelTest {
     @Severity(SeverityLevel.NORMAL)
     fun tc021_savingEditedNewsWithEmptyRequiredFieldsShowsToast() {
         Allure.step("Переход в панель управления и нажатие Edit") {
-            MainPage.openNewsFromMain()
-            MainPage.openControlPanel()
+            MainPageOld.openNewsFromMain()
+            MainPageOld.openControlPanel()
             onView(
                 allOf(
                     withId(R.id.edit_news_item_image_view),

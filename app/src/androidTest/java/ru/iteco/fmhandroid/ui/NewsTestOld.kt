@@ -18,8 +18,8 @@ import io.qameta.allure.kotlin.junit4.DisplayName
 import org.junit.*
 import org.junit.runner.RunWith
 import ru.iteco.fmhandroid.R
-import ru.iteco.fmhandroid.page.LoginPage
-import ru.iteco.fmhandroid.page.MainPage
+import ru.iteco.fmhandroid.page.LoginPageOld
+import ru.iteco.fmhandroid.page.MainPageOld
 import ru.iteco.fmhandroid.utils.TestData
 import ru.iteco.fmhandroid.utils.Wait
 import ru.iteco.fmhandroid.utils.Wait.forAnyDisplayed
@@ -42,18 +42,18 @@ class NewsTest {
         )
         try {
             onView(withHint("Login")).check(matches(isDisplayed()))
-            LoginPage.typeLogin(TestData.LOGIN)
-            LoginPage.typePassword(TestData.PASSWORD)
-            LoginPage.tapSignIn()
-            MainPage.assertOpened()
+            LoginPageOld.typeLogin(TestData.LOGIN)
+            LoginPageOld.typePassword(TestData.PASSWORD)
+            LoginPageOld.tapSignIn()
+            MainPageOld.assertOpened()
         } catch (_: NoMatchingViewException) {
-            MainPage.assertOpened()
+            MainPageOld.assertOpened()
         }
     }
 
     @After
     fun logout() {
-        MainPage.logout()
+        MainPageOld.logout()
     }
 
     @Test
@@ -63,7 +63,7 @@ class NewsTest {
     @Severity(SeverityLevel.NORMAL)
     fun tc004_openAllNewsFromMain() {
         Allure.step("Открытие раздела «Новости»") {
-            MainPage.openNewsFromMain()
+            MainPageOld.openNewsFromMain()
         }
         Allure.step("Проверка элементов управления") {
             onView(withId(R.id.sort_news_material_button)).check(matches(isDisplayed()))
@@ -79,7 +79,7 @@ class NewsTest {
     @Severity(SeverityLevel.NORMAL)
     fun tc005_openNewsFromMenu() {
         Allure.step("Открытие раздела «Новости» через меню") {
-            MainPage.openNewsFromMenu()
+            MainPageOld.openNewsFromMenu()
         }
         Allure.step("Проверка элементов управления") {
             onView(withId(R.id.sort_news_material_button)).check(matches(isDisplayed()))
@@ -95,7 +95,7 @@ class NewsTest {
     @Severity(SeverityLevel.NORMAL)
     fun tc006_checkForEmptyNewsList() {
         Allure.step("Открытие раздела «Новости»") {
-            MainPage.openNewsFromMenu()
+            MainPageOld.openNewsFromMenu()
         }
         Allure.step("Проверка состояния пустого списка") {
             onView(withId(R.id.empty_news_list_image_view)).check(matches(isDisplayed()))
