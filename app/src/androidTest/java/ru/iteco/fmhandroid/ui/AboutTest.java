@@ -3,6 +3,7 @@ package ru.iteco.fmhandroid.ui;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,14 +24,18 @@ public class AboutTest {
     private final MainPage mainPage = new MainPage();
     private final AboutPage aboutPage = new AboutPage();
 
+    @Before
+    public void loginIfNeeded() {
+        if (loginPage.waitForLoginScreenOrMainScreen()) {
+            loginPage
+                    .enterLogin(TestData.VALID_LOGIN)
+                    .enterPassword(TestData.VALID_PASSWORD)
+                    .tapLoginButton();
+        }
+    }
+
     @Test
     public void tc009_openAboutScreen() {
-        loginPage
-                .waitForLoginScreen()
-                .enterLogin(TestData.VALID_LOGIN)
-                .enterPassword(TestData.VALID_PASSWORD)
-                .tapLoginButton();
-
         mainPage.goToAbout();
 
         aboutPage.checkAboutScreenOpened();

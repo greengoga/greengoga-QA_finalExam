@@ -2,7 +2,9 @@ package ru.iteco.fmhandroid.ui;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +13,10 @@ import ru.iteco.fmhandroid.data.TestData;
 import ru.iteco.fmhandroid.page.ControlPanelPage;
 import ru.iteco.fmhandroid.page.LoginPage;
 import ru.iteco.fmhandroid.page.MainPage;
+import ru.iteco.fmhandroid.page.NewsPage;
 
+
+@LargeTest
 @RunWith(AndroidJUnit4.class)
 public class ControlPanelTest {
 
@@ -20,70 +25,66 @@ public class ControlPanelTest {
             new ActivityScenarioRule<>(AppActivity.class);
 
     private final LoginPage loginPage = new LoginPage();
-    private final MainPage mainPage = new MainPage();
-    private final ControlPanelPage controlPanelPage = new ControlPanelPage();
+
+    @Before
+    public void loginIfNeeded() {
+        if (loginPage.waitForLoginScreenOrMainScreen()) {
+            loginPage
+                    .enterLogin(TestData.VALID_LOGIN)
+                    .enterPassword(TestData.VALID_PASSWORD)
+                    .tapLoginButton();
+        }
+    }
 
     @Test
     public void tc007_openControlPanel() {
-        loginPage
-                .waitForLoginScreen()
-                .enterLogin(TestData.VALID_LOGIN)
-                .enterPassword(TestData.VALID_PASSWORD)
-                .tapLoginButton();
+            MainPage mainPage = new MainPage();
+        mainPage.goToNews();
 
-        mainPage.goToControlPanel();
-
-        controlPanelPage.checkControlPanelOpened();
+           NewsPage newsPage = new NewsPage();
+        ControlPanelPage controlPanelPage = newsPage.openControlPanel();
+        controlPanelPage.checkControlPanelTitle();
     }
 
     @Test
     public void tc010_createNews() {
-        loginPage
-                .waitForLoginScreen()
-                .enterLogin(TestData.VALID_LOGIN)
-                .enterPassword(TestData.VALID_PASSWORD)
-                .tapLoginButton();
+        String uniqueTitle = TestData.NEWS_TITLE + "_" + System.currentTimeMillis();
+        String uniqueDescription = TestData.NEWS_DESCRIPTION + "_" + System.currentTimeMillis();
 
-        mainPage.goToControlPanel();
+        MainPage mainPage = new MainPage();
+        mainPage.goToNews();
 
-        controlPanelPage.createNews(
-                TestData.NEWS_TITLE,
-                TestData.NEWS_DESCRIPTION
-        );
+        ControlPanelPage controlPanelPage = new NewsPage()
+                .openControlPanel()
+                .createNews(uniqueTitle, uniqueDescription);
 
-        controlPanelPage.checkNewsWithTitleDisplayed(TestData.NEWS_TITLE);
+        controlPanelPage.checkNewsWithDescriptionDisplayed(uniqueDescription);
     }
+
     @Test
     public void tc014_createNewsWithEmptyFields() {
-        loginPage
-                .waitForLoginScreen()
-                .enterLogin(TestData.VALID_LOGIN)
-                .enterPassword(TestData.VALID_PASSWORD)
-                .tapLoginButton();
+        MainPage mainPage = new MainPage();
+        mainPage.goToNews();
 
-        mainPage.goToControlPanel();
+        NewsPage newsPage = new NewsPage();
+        ControlPanelPage controlPanelPage = newsPage.openControlPanel();
 
         controlPanelPage.tapAddNews()
-                         .saveNews();
+                .saveNews();
 
-        controlPanelPage.checkControlPanelOpened();
+        controlPanelPage.checkEmptyFieldsMessage();
     }
 
     @Test
-    public void tc015_cancelNewsCreation() {
-        loginPage
-                .waitForLoginScreen()
-                .enterLogin(TestData.VALID_LOGIN)
-                .enterPassword(TestData.VALID_PASSWORD)
-                .tapLoginButton();
+    public void tc015_deleteNews() {
+        String uniqueTitle = TestData.NEWS_TITLE + "_" + System.currentTimeMillis();
 
-        mainPage.goToControlPanel();
+        ControlPanelPage controlPanelPage = new MainPage()
+                .goToNews()
+                .openControlPanel();
+        controlPanelPage.createNews(uniqueTitle, TestData.NEWS_DESCRIPTION);
 
-        controlPanelPage.tapAddNews()
-                         .fillNewsTitle(TestData.NEWS_TITLE)
-                         .fillNewsDescription(TestData.NEWS_DESCRIPTION)
-                         .cancelNewsCreation();
-
-        controlPanelPage.checkControlPanelOpened();
+        controlPanelPage.deleteNewsByTitle(uniqueTitle);
+        controlPanelPage.checkNewsWithTitleNotDisplayed(uniqueTitle);
     }
 }
