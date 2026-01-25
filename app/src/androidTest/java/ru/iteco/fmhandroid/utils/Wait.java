@@ -3,10 +3,13 @@ package ru.iteco.fmhandroid.utils;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 
 import android.view.View;
 
 import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
 
 import org.hamcrest.Matcher;
 
@@ -27,5 +30,15 @@ public class Wait {
         } while (System.currentTimeMillis() - start < timeoutMs);
 
         throw new AssertionError("View not displayed within timeout");
+    }
+
+    public static ViewAction waitFor(long millis) {
+        return new ViewAction() {
+            @Override public Matcher<View> getConstraints() { return isRoot(); }
+            @Override public String getDescription() { return "Wait for " + millis + " ms."; }
+            @Override public void perform(UiController uiController, View view) {
+                uiController.loopMainThreadForAtLeast(millis);
+            }
+        };
     }
 }

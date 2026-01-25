@@ -4,8 +4,6 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import android.widget.EditText;
@@ -16,16 +14,6 @@ import static org.hamcrest.Matchers.allOf;
 import io.qameta.allure.Step;
 import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.utils.Wait;
-
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
-import static org.hamcrest.Matchers.not;
-
-import androidx.test.espresso.NoMatchingViewException;
-import androidx.test.espresso.PerformException;
-import androidx.test.espresso.assertion.ViewAssertions;
-import androidx.test.espresso.matcher.ViewMatchers;
-import android.app.Activity;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 public class LoginPage {
 

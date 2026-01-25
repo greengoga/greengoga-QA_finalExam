@@ -20,23 +20,11 @@ import static org.hamcrest.Matchers.is;
 
 import static ru.iteco.fmhandroid.utils.ActivityHelper.getCurrentActivity;
 import static ru.iteco.fmhandroid.utils.RecyclerViewChildActions.clickChildViewWithId;
+import static ru.iteco.fmhandroid.utils.Wait.waitFor;
 
 import androidx.test.espresso.contrib.RecyclerViewActions;
 
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
-
-import android.view.View;
-
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.test.espresso.UiController;
-import androidx.test.espresso.ViewAction;
-import androidx.test.espresso.PerformException;
-import androidx.test.espresso.util.HumanReadables;
-
-import org.hamcrest.Matcher;
-
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import io.qameta.allure.Step;
 import ru.iteco.fmhandroid.R;
@@ -89,17 +77,6 @@ public class ControlPanelPage {
         confirmPublishTime();
         saveNews();
         return this;
-    }
-
-    @Step("Check created news with title is displayed in list")
-    public void checkNewsWithTitleDisplayed(String title) {
-        onView(withId(newsList))
-                .perform(
-                        RecyclerViewActions.scrollTo(
-                                hasDescendant(withText(title))
-                        )
-                )
-                .check(matches(hasDescendant(withText(title))));
     }
 
     @Step("Check Control Panel title")
@@ -164,64 +141,15 @@ public class ControlPanelPage {
     }
 
     @Step("Delete all news items one by one")
-    private int getNewsListItemCount() {
-        AtomicInteger count = new AtomicInteger(0);
-        onView(withId(newsList)).check((view, noViewFoundException) -> {
-            if (noViewFoundException != null) throw noViewFoundException;
-            RecyclerView rv = (RecyclerView) view;
-            RecyclerView.Adapter<?> adapter = rv.getAdapter();
-            count.set(adapter == null ? 0 : adapter.getItemCount());
-        });
-        return count.get();
-    }
-
-    private static ViewAction waitForRecyclerViewItemCount(int recyclerViewId, int expectedCount, long timeoutMs) {
-        return new ViewAction() {
-            @Override
-            public Matcher<View> getConstraints() {
-                return isRoot();
-            }
-
-            @Override
-            public String getDescription() {
-                return "Wait up to " + timeoutMs + " ms for RecyclerView(" + recyclerViewId + ") itemCount == " + expectedCount;
-            }
-
-            @Override
-            public void perform(UiController uiController, View view) {
-                long start = System.currentTimeMillis();
-                long end = start + timeoutMs;
-
-                do {
-                    RecyclerView rv = view.getRootView().findViewById(recyclerViewId);
-                    if (rv != null && rv.getAdapter() != null && rv.getAdapter().getItemCount() == expectedCount) {
-                        return;
-                    }
-                    uiController.loopMainThreadForAtLeast(50);
-                } while (System.currentTimeMillis() < end);
-
-                throw new PerformException.Builder()
-                        .withActionDescription(getDescription())
-                        .withViewDescription(HumanReadables.describe(view))
-                        .withCause(new TimeoutException())
-                        .build();
-            }
-        };
-    }
-
-    @Step("Delete all news items one by one")
     public ControlPanelPage deleteAllNews() {
         while (true) {
             try {
                 onView(withId(newsList))
-                        .perform(
-                                RecyclerViewActions.actionOnItemAtPosition(
-                                        0,
-                                        clickChildViewWithId(R.id.delete_news_item_image_view)
-                                )
-                        );
-                //костыль
-                Thread.sleep(100);
+                        .perform(RecyclerViewActions.actionOnItemAtPosition(
+                                0, clickChildViewWithId(R.id.delete_news_item_image_view)));
+
+                onView(isRoot()).perform(waitFor(100));
+
                 onView(withText(android.R.string.ok))
                         .inRoot(isDialog())
                         .perform(click());

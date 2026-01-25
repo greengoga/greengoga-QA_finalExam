@@ -20,15 +20,26 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
+import io.qameta.allure.android.rules.ScreenshotRule;
 import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.data.TestData;
 import ru.iteco.fmhandroid.page.LoginPage;
 import ru.iteco.fmhandroid.page.MainPage;
 
+@Epic("User Management")
+@Feature("Authentication")
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class AuthTest {
 
+    @Rule
+    public ScreenshotRule screenshotRule = new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "ss_on_failure");
     @Rule
     public ActivityScenarioRule<AppActivity> activityRule =
             new ActivityScenarioRule<>(AppActivity.class);
@@ -52,6 +63,9 @@ public class AuthTest {
     private View decorView;
 
     @Test
+    @Story("Login with valid credentials")
+    @Severity(SeverityLevel.BLOCKER)
+    @Description("Verify that a user can successfully log in with valid login and password")
     public void tc001_validLogin() {
         loginPage
                 .waitForLoginScreen()
@@ -61,6 +75,9 @@ public class AuthTest {
     }
 
     @Test
+    @Story("Login with empty fields")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify the error message when login and password fields are left blank")
     public void tc002_emptyLoginAndPassword() {
         loginPage
                 .waitForLoginScreen()
@@ -74,6 +91,9 @@ public class AuthTest {
     }
 
     @Test
+    @Story("Login with invalid credentials")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Verify the error message when entering non-existent user data")
     public void tc003_invalidLogin() {
         loginPage
                 .waitForLoginScreen()
