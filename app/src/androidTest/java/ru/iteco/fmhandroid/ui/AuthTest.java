@@ -20,13 +20,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Severity;
-import io.qameta.allure.SeverityLevel;
-import io.qameta.allure.Story;
 import io.qameta.allure.android.rules.ScreenshotRule;
+import io.qameta.allure.kotlin.Description;
+import io.qameta.allure.kotlin.Epic;
+import io.qameta.allure.kotlin.Feature;
+import io.qameta.allure.kotlin.Severity;
+import io.qameta.allure.kotlin.SeverityLevel;
+import io.qameta.allure.kotlin.Story;
+import io.qameta.allure.kotlin.junit4.DisplayName;
 import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.data.TestData;
 import ru.iteco.fmhandroid.page.LoginPage;
@@ -39,33 +40,33 @@ import ru.iteco.fmhandroid.page.MainPage;
 public class AuthTest {
 
     @Rule
-    public ScreenshotRule screenshotRule = new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "ss_on_failure");
+    public ScreenshotRule screenshotRule = new ScreenshotRule(ScreenshotRule.Mode.FAILURE,
+            String.valueOf(System.currentTimeMillis()));
     @Rule
     public ActivityScenarioRule<AppActivity> activityRule =
             new ActivityScenarioRule<>(AppActivity.class);
 
     @Before
-    public void logoutIfNeeded() {
+    public void setUp() {
+        activityRule.getScenario().onActivity(activity -> {
+            decorView = activity.getWindow().getDecorView();
+        });
+
+        loginPage.initDecorView(decorView);
+
         if (mainPage.isMainScreenDisplayed()) {
             mainPage.logout();
         }
-    }
-
-    @Before
-    public void setUp() {
-        activityRule.getScenario().onActivity(activity ->
-                decorView = activity.getWindow().getDecorView()
-        );
     }
 
     private final LoginPage loginPage = new LoginPage();
     private final MainPage mainPage = new MainPage();
     private View decorView;
 
-    @Test
+   @Test
     @Story("Login with valid credentials")
     @Severity(SeverityLevel.BLOCKER)
-    @Description("Verify that a user can successfully log in with valid login and password")
+    @DisplayName("Verify that a user can successfully log in with valid login and password")
     public void tc001_validLogin() {
         loginPage
                 .waitForLoginScreen()
@@ -77,7 +78,7 @@ public class AuthTest {
     @Test
     @Story("Login with empty fields")
     @Severity(SeverityLevel.NORMAL)
-    @Description("Verify the error message when login and password fields are left blank")
+    @DisplayName("Verify the error message when login and password fields are left blank")
     public void tc002_emptyLoginAndPassword() {
         loginPage
                 .waitForLoginScreen()
@@ -85,15 +86,15 @@ public class AuthTest {
                 .enterPassword("")
                 .tapLoginButtonExpectingError();
 
-        onView(withText(R.string.empty_login_or_password))
-                .inRoot(withDecorView(not(is(decorView))))
-                .check(matches(isDisplayed()));
+        loginPage
+                .checkEmptyLoginOrPasswordToast();
+
     }
 
     @Test
     @Story("Login with invalid credentials")
     @Severity(SeverityLevel.CRITICAL)
-    @Description("Verify the error message when entering non-existent user data")
+    @DisplayName("Verify the error message when entering non-existent user data")
     public void tc003_invalidLogin() {
         loginPage
                 .waitForLoginScreen()
@@ -101,8 +102,7 @@ public class AuthTest {
                 .enterPassword(TestData.VALID_PASSWORD)
                 .tapLoginButtonExpectingError();
 
-        onView(withText(R.string.error))
-                .inRoot(withDecorView(not(is(decorView))))
-                .check(matches(isDisplayed()));
+        loginPage
+                .checkLoginErrorToast();
     }
 }

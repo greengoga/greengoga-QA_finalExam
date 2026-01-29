@@ -6,7 +6,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import androidx.test.espresso.assertion.ViewAssertions;
 
-import io.qameta.allure.Step;
+import io.qameta.allure.kotlin.Allure;
 import ru.iteco.fmhandroid.R;
 
 public class AboutPage {
@@ -16,27 +16,27 @@ public class AboutPage {
     private final int privacyPolicyLink = R.id.about_privacy_policy_value_text_view;
     private final int termsOfUseLink = R.id.about_terms_of_use_value_text_view;
 
-    @Step("Check About screen is opened")
     public void checkAboutScreenOpened() {
-        onView(withId(aboutTitle))
-                .check(ViewAssertions.matches(isDisplayed()));
+        Allure.step("Check About screen is opened");
+            onView(withId(aboutTitle))
+                    .check(ViewAssertions.matches(isDisplayed()));
     }
 
-    @Step("Check app version is displayed")
     public void checkVersionDisplayed() {
-        onView(withId(versionValue))
-                .check(ViewAssertions.matches(isDisplayed()));
+        Allure.step("Check app version is displayed");
+            onView(withId(versionValue))
+                    .check(ViewAssertions.matches(isDisplayed()));
     }
 
-    @Step("Check Privacy Policy link is displayed")
     public void checkPrivacyPolicyLinkDisplayed() {
-        onView(withId(privacyPolicyLink))
-                .check(ViewAssertions.matches(isDisplayed()));
+        Allure.step("Check Privacy Policy link is displayed");
+            onView(withId(privacyPolicyLink))
+                    .check(ViewAssertions.matches(isDisplayed()));
     }
 
-    @Step("Check Terms of Use link is displayed")
     public void checkTermsOfUseLinkDisplayed() {
-        onView(withId(termsOfUseLink))
-                .check(ViewAssertions.matches(isDisplayed()));
+        Allure.step("Check Terms of Use link is displayed");
+            onView(withId(termsOfUseLink))
+                    .check(ViewAssertions.matches(isDisplayed()));
     }
 }

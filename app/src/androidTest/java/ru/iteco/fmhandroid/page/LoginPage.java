@@ -11,49 +11,59 @@ import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static org.hamcrest.Matchers.allOf;
 
-import io.qameta.allure.Step;
+import io.qameta.allure.kotlin.Allure;
 import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.utils.Wait;
+
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.not;
+
+import android.view.View;
 
 public class LoginPage {
 
     private final int loginField = R.id.login_text_input_layout;
     private final int passwordField = R.id.password_text_input_layout;
     private final int loginButton = R.id.enter_button;
+    private View decorView;
 
-    @Step("Wait for login screen to be displayed")
     public LoginPage waitForLoginScreen() {
-        Wait.waitForView(withId(loginField), 10_000);
+        Allure.step("Wait for login screen to be displayed");
+            Wait.waitForView(withId(loginField), 10_000);
         return this;
     }
 
-    @Step("Enter login: {login}")
     public LoginPage enterLogin(String login) {
-        onView(allOf(
-                isDescendantOfA(withId(loginField)),
-                isAssignableFrom(EditText.class)
-        )).perform(replaceText(login), closeSoftKeyboard());
+        Allure.step("Enter login: " + login);
+            onView(allOf(
+                    isDescendantOfA(withId(loginField)),
+                    isAssignableFrom(EditText.class)
+            )).perform(replaceText(login), closeSoftKeyboard());
+
         return this;
     }
 
-    @Step("Enter password: {password}")
     public LoginPage enterPassword(String password) {
-        onView(allOf(
-                isDescendantOfA(withId(passwordField)),
-                isAssignableFrom(EditText.class)
-        )).perform(replaceText(password), closeSoftKeyboard());
+        Allure.step("Enter password");
+            onView(allOf(
+                    isDescendantOfA(withId(passwordField)),
+                    isAssignableFrom(EditText.class)
+            )).perform(replaceText(password), closeSoftKeyboard());
         return this;
     }
 
-    @Step("Tap Login button")
     public MainPage tapLoginButton() {
-        onView(withId(loginButton)).perform(click());
+        Allure.step("Tap Login button");
+            onView(withId(loginButton)).perform(click());
         return new MainPage();
     }
 
-    @Step("Tap Login button (expect error)")
     public LoginPage tapLoginButtonExpectingError() {
-        onView(withId(loginButton)).perform(click());
+        Allure.step("Tap Login button (expect error)");
+            onView(withId(loginButton)).perform(click());
         return this;
     }
 
@@ -64,5 +74,24 @@ public class LoginPage {
         } catch (AssertionError e) {
             return false;
         }
+    }
+
+    public LoginPage initDecorView(View decorView) {
+        this.decorView = decorView;
+        return this;
+    }
+
+    public LoginPage checkEmptyLoginOrPasswordToast() {
+        onView(withText(R.string.empty_login_or_password))
+                .inRoot(withDecorView(not(decorView)))
+                .check(matches(isDisplayed()));
+        return this;
+    }
+
+    public LoginPage checkLoginErrorToast() {
+        onView(withText(R.string.error))
+                .inRoot(withDecorView(not(decorView)))
+                .check(matches(isDisplayed()));
+        return this;
     }
 }

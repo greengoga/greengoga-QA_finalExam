@@ -9,13 +9,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Severity;
-import io.qameta.allure.SeverityLevel;
-import io.qameta.allure.Story;
+
 import io.qameta.allure.android.rules.ScreenshotRule;
+import io.qameta.allure.kotlin.Epic;
+import io.qameta.allure.kotlin.Feature;
+import io.qameta.allure.kotlin.Severity;
+import io.qameta.allure.kotlin.SeverityLevel;
+import io.qameta.allure.kotlin.Story;
+import io.qameta.allure.kotlin.junit4.DisplayName;
 import ru.iteco.fmhandroid.data.TestData;
 import ru.iteco.fmhandroid.page.LoginPage;
 import ru.iteco.fmhandroid.page.MainPage;
@@ -28,7 +29,8 @@ import ru.iteco.fmhandroid.page.QuotePage;
 public class QuoteTest {
 
     @Rule
-    public ScreenshotRule screenshotRule = new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "ss_on_failure");
+    public ScreenshotRule screenshotRule = new ScreenshotRule(ScreenshotRule.Mode.FAILURE,
+            String.valueOf(System.currentTimeMillis()));
     @Rule
     public ActivityScenarioRule<AppActivity> activityRule =
             new ActivityScenarioRule<>(AppActivity.class);
@@ -50,7 +52,7 @@ public class QuoteTest {
     @Test
     @Story("Expand Mission Quotes")
     @Severity(SeverityLevel.NORMAL)
-    @Description(value = "Verify that the mission quotes can be expanded to show full motivational text")
+    @DisplayName(value = "Verify that the mission quotes can be expanded to show full motivational text")
     public void tc011_openQuoteScreen() {
         mainPage.goToQuotes();
 

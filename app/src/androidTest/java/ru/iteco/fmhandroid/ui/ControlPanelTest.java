@@ -9,13 +9,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Severity;
-import io.qameta.allure.SeverityLevel;
-import io.qameta.allure.Story;
 import io.qameta.allure.android.rules.ScreenshotRule;
+import io.qameta.allure.kotlin.Epic;
+import io.qameta.allure.kotlin.Feature;
+import io.qameta.allure.kotlin.Severity;
+import io.qameta.allure.kotlin.SeverityLevel;
+import io.qameta.allure.kotlin.Story;
+import io.qameta.allure.kotlin.junit4.DisplayName;
 import ru.iteco.fmhandroid.data.TestData;
 import ru.iteco.fmhandroid.page.ControlPanelPage;
 import ru.iteco.fmhandroid.page.LoginPage;
@@ -28,9 +28,9 @@ import ru.iteco.fmhandroid.page.NewsPage;
 @RunWith(AndroidJUnit4.class)
 public class ControlPanelTest {
 
-
     @Rule
-    public ScreenshotRule screenshotRule = new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "ss_on_failure");
+    public ScreenshotRule screenshotRule = new ScreenshotRule(ScreenshotRule.Mode.FAILURE,
+            String.valueOf(System.currentTimeMillis()));
     @Rule
     public ActivityScenarioRule<AppActivity> activityRule =
             new ActivityScenarioRule<>(AppActivity.class);
@@ -50,7 +50,7 @@ public class ControlPanelTest {
     @Test
     @Story("Open Control Panel")
     @Severity(SeverityLevel.NORMAL)
-    @Description("Verify navigation to the News Control Panel from the News screen")
+    @DisplayName("Verify navigation to the News Control Panel from the News screen")
     public void tc007_openControlPanel() {
             MainPage mainPage = new MainPage();
         mainPage.goToNews();
@@ -63,7 +63,7 @@ public class ControlPanelTest {
     @Test
     @Story("Create News Item")
     @Severity(SeverityLevel.CRITICAL)
-    @Description("Verify that a user can create a new news item with a unique title and description")
+    @DisplayName("Verify that a user can create a new news item with a unique title and description")
     public void tc010_createNews() {
         String uniqueTitle = TestData.NEWS_TITLE + "_" + System.currentTimeMillis();
         String uniqueDescription = TestData.NEWS_DESCRIPTION + "_" + System.currentTimeMillis();
@@ -81,7 +81,7 @@ public class ControlPanelTest {
     @Test
     @Story("Form Validation")
     @Severity(SeverityLevel.MINOR)
-    @Description("Verify validation error when trying to save news with empty mandatory fields")
+    @DisplayName("Verify validation error when trying to save news with empty mandatory fields")
     public void tc014_createNewsWithEmptyFields() {
         MainPage mainPage = new MainPage();
         mainPage.goToNews();
@@ -98,7 +98,7 @@ public class ControlPanelTest {
     @Test
     @Story("Delete Specific News")
     @Severity(SeverityLevel.NORMAL)
-    @Description("Verify that a specific news item can be deleted by its title")
+    @DisplayName("Verify that a specific news item can be deleted by its title")
     public void tc015_deleteNews() {
         String uniqueTitle = TestData.NEWS_TITLE + "_" + System.currentTimeMillis();
 

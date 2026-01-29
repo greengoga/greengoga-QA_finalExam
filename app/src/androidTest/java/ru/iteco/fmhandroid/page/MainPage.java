@@ -7,7 +7,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 
-import io.qameta.allure.Step;
 import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.utils.Wait;
 
@@ -25,39 +24,44 @@ public class MainPage {
         }
     }
 
-    @Step("Open main menu")
     public MainPage openMenu() {
-        Wait.waitForView(withId(menuButton), 5000);
-        onView(withId(menuButton))
-                .check(matches(isDisplayed()))
-                .perform(click());
+ //       Allure.step("Open main menu", () -> {
+            Wait.waitForView(withId(menuButton), 5000);
+            onView(withId(menuButton))
+                    .check(matches(isDisplayed()))
+                    .perform(click());
+  //      });
         return this;
     }
 
-    @Step("Go to News")
     public NewsPage goToNews() {
-        openMenu();
-        onView(withText(R.string.news)).perform(click());
+ //       Allure.step("Go to News", () -> {
+            openMenu();
+            onView(withText(R.string.news)).perform(click());
+ //       });
         return new NewsPage();
     }
 
-    @Step("Go to About")
     public AboutPage goToAbout() {
-        openMenu();
-        onView(withText(R.string.about)).perform(click());
+ //       Allure.step("Go to About", () -> {
+            openMenu();
+            onView(withText(R.string.about)).perform(click());
+  //      });
         return new AboutPage();
     }
 
-    @Step("Go to Quotes")
     public QuotePage goToQuotes() {
-        onView(withId(quoteMenuItem)).perform(click());
+  //      Allure.step("Go to Quotes", () -> {
+            onView(withId(quoteMenuItem)).perform(click());
+  //      });
         return new QuotePage();
     }
 
-    @Step("Logout")
     public void logout() {
+  //      Allure.step("Logout", () -> {
             Wait.waitForView(withId(R.id.authorization_image_button), 5000);
             onView(withId(R.id.authorization_image_button)).perform(click());
             onView(withText(R.string.log_out)).perform(click());
+ //       });
     }
 }
