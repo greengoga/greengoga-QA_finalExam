@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+
+import io.qameta.allure.kotlin.Allure;
 import ru.iteco.fmhandroid.R;
 
 public class QuotePage {
@@ -23,22 +25,20 @@ public class QuotePage {
     private final int descriptionText = R.id.our_mission_item_description_text_view;
 
     public void expandFirstQuote() {
- //       Allure.step("Expand first quote card", () -> {
-            onView(withId(recyclerView))
-                    .perform(actionOnItemAtPosition(0, ViewActions.click()));
-  //      });
+        Allure.step("Expand first quote card");
+        onView(withId(recyclerView))
+                .perform(actionOnItemAtPosition(0, ViewActions.click()));
     }
 
     public void checkFirstQuoteDescriptionDisplayed() {
-   //     Allure.step("Check description of first quote is displayed", () -> {
-            onView(withId(recyclerView))
-                    .check(matches(isDisplayed()));
+        Allure.step("Check description of first quote is displayed");
+        onView(withId(recyclerView))
+                .check(matches(isDisplayed()));
 
-            onView(
-                    withRecyclerView(recyclerView)
-                            .atPositionOnView(0, descriptionText)
-            ).check(matches(isDisplayed()));
-  //      });
+        onView(
+                withRecyclerView(recyclerView)
+                        .atPositionOnView(0, descriptionText)
+        ).check(matches(isDisplayed()));
     }
 
     public static RecyclerViewMatcher withRecyclerView(int recyclerViewId) {
